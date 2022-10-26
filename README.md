@@ -46,8 +46,10 @@ Then, instead of having you write the full script, just copy this into your comm
     # two commands to show you the differences between error and output files
     echo "Hello world!!"
     cat "Hello world!!"
+    cd $SLURM_SUBMIT_DIR
 
-    rsync --progress /path/to/Genus_species* reads/
+    # copie
+    rsync --progress /users/lnbarrow/RawReadsBiodivInf/Genus_species* reads/
 
 Once your reads are copied over, we need to run Stacks. Fortunately this is pretty simple, particularly because these parameters seem to work fairly well!
 
@@ -72,4 +74,11 @@ Once your reads are copied over, we need to run Stacks. Fortunately this is pret
                   -m 10 -M 5 -n 5 \
                   --popmap popmap_example \
                   --samples reads/
+
+
+POPULATIONS NEEDS VCF, STRUCTURE, AND PHYLIP
+
+Sampling site info -> summ stats, vcf, structure
+
+No sampling site info -> phylip
 
