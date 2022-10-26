@@ -82,3 +82,9 @@ Sampling site info -> summ stats, vcf, structure
 
 No sampling site info -> phylip
 
+TODO:
+
+Add looking at/counting fastqs to markdown and ppt
+
+Copying to device:
+
