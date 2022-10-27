@@ -2,7 +2,7 @@
 
 ## Logging in and setting up directories
 
-Here are the main commands we'll be running for the Stacks class in Biodiversity Informatics.
+Here we'll go over the main commands we'll be running for the Stacks class in Biodiversity Informatics. Stacks is a widely used pipeline in bioinformatics, and has a lot of [documentation on its website](https://catchenlab.life.illinois.edu/stacks/).
 
 Before we get into stacks, we'll have to log on to CARC and make our working directory. Fortunately, everything here should take up a maximum of 20 Gb, which is within the range of your alloted home directory storage (100 Gb, up to 200 Gb for a week). First, we'll log into our machine. I'm assuming we'll be running this on hopper, as it tends to have the fastest queue times:
 
@@ -18,7 +18,7 @@ Then, we'll set up some directories:
 
     mkdir reads
     mkdir stacks_output
-    mkdir input_files
+    mkdir analysis_files
     mkdir alignment_files
     mkdir snp_files
   
@@ -83,7 +83,11 @@ Then, we'll use zcat to spit the contents of the file into the word count (wc) c
 
 ### Making a conda environment
 
-Now that we have our reads, we need to set up a conda environment for Stacks. This is pretty straightforward, and can be done to install most software you'd want to use on CARC! First, you have to load the miniconda module. Because it is used so much, you don't even need to sue its full name.
+Now that we have our reads, we need to set up a conda environment for Stacks. This is pretty straightforward, and can be done to install most software you'd want to use on CARC! First, you have to load the miniconda module. Let's look up what it's called by entering:
+
+    module avail miniconda3
+
+Because it is used so much, you don't even need to spell out its full name.
 
     module load miniconda3
 
@@ -126,7 +130,7 @@ With the environment set up, it's time to set up the denovo assembly pipeline in
 
     nano run_stacks.slurm
 
-Fortunately the script is pretty simple, particularly because these parameters seem to work fairly well! 
+Fortunately the script is pretty simple, particularly because these parameters seem to work fairly well! You can read about it [here](https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php). Note that setting parameters is complicated (and described at length [here](https://catchenlab.life.illinois.edu/stacks/param_tut.php), and it is good to test that your results are robust to multiple parameter values. We'll stick to the ones here for now.
 
     #!/bin/bash
 
@@ -146,7 +150,7 @@ Fortunately the script is pretty simple, particularly because these parameters s
     cd $SLURM_SUBMIT_DIR
 
     denovo_map.pl -T 8 -o stacks_output/ \
-                  -m 10 -M 5 -n 5 \
+                  -m 10 -M 3 -n 3 \
                   --popmap popmap_example \
                   --samples reads/
 
@@ -154,15 +158,80 @@ Then submit the script like because. It should take ~15 minutes to run for small
 
     sbatch run_stacks.slurm
 
-POPULATIONS NEEDS VCF, STRUCTURE, AND PHYLIP
+Once it's done running, you'll want to look at the output to make sure you have a reasonable number of loci. There are two log files for this, both in your stacks_output folder. The first and longest is denovo_map.log, which outlines the whole process that denovo_map.pl ran for you. The second one is gstacks.log has a component of your assignment, the number of loci genotypes (it's in the first log file, but harder to find). First, let's look at it like:
 
-Sampling site info -> summ stats, vcf, structure
+    less stacks_output/gstacks.log
 
-No sampling site info -> phylip
+We'll then copy it to whatever computer you are using for your assignments. To do this, open a second terminal (or Powershell for Windows). Then, navigate to the directory you want to store it by right clicking in file explorer and copying the address as text (sorry, don't know what it's called in Mac). If the path has spaces, you'll need to put it in quotes. Here's an example for windows (using backslashes, because Windows is special):
 
-TODO:
+    cd 'C:\Documents\Biodiversity Informatics'
 
-Add looking at/counting fastqs to markdown and ppt
+Then, you can use the same command we used to move reads around within CARC to move it to your computer. The syntax is always "rsync source destination". The source is the address of the CARC server and path to the file within CARC (using ~ to represent your home directory). Because we are in our target directory, the target can be represented by a period, like this:
 
-Copying to device:
+    rsync username@hopper.alliance.unm.edu:~/stacks_example/stacks_output/gstacks.log .
 
+You don't need to send the whole log in for your assignment, but this step will be very important for the files we'll be making with our stacks output.
+
+### Generating files for future analyses
+
+Once you've run the main stacks pipeline, you can use its output to make input files for a wide array of programs. To do this, we'll use Stack's populations module. We'll need four major files: summary statistics (e.g. genetic diversity), Variant Call Format (VCF), Structure, and Phylip files. You can read more about populations [here](https://catchenlab.life.illinois.edu/stacks/comp/populations.php). The first three use single nucleotide polymorphism (SNPs), and the last is a big alignment of all of your data. First, make a new script:
+
+    nano run_populations.slurm
+
+Then we need to call it in two steps (one for each data type), and then rename the relevant output (including the gstacks log), copy this script into your open window and change the names at the bottom to better match your taxon:
+
+    #!/bin/bash
+
+    #SBATCH --ntasks=1
+    #SBATCH --cpus-per-task=8
+    #SBATCH --time=10:00:00
+    #SBATCH --job-name=example
+    #SBATCH --output=example_out_%j
+    #SBATCH --error=example_error_%j
+    #SBATCH --partition=general
+    #SBATCH --mail-type=FAIL,END
+    #SBATCH --mail-user=egyllenhaal@unm.edu
+
+    module load miniconda3
+    source activate stacks-example-env
+
+    cd $SLURM_SUBMIT_DIR
+    
+    # SNP files
+    populations --in-path stacks_output/ \
+                --popmap popmap_example \
+                --out-path snp_files \
+                --min-samples-overall 0.8 \
+                --write-random-snp \
+                --fstats --vcf --structure \
+                --threads 8
+    
+    # Alignment files
+    populations --in-path stacks_output/ \
+                --popmap popmap_phylo_example \
+                --out-path alignment_files \
+                --min-samples-overall 0.8 \
+                --phylip-var-all \
+                --threads 8
+
+    # copy log files
+    cp snp_files/populations.log analysis_files/Genus_species_populations.log
+    cp stacks_output/gstacks.log analysis_files/Genus_species_gstacks.log
+
+    # move files for future analysis
+    mv snp_files/populations.snps.vcf analysis_files/Genus_species_snps.vcf
+    mv snp_files/populations.sumstats_summary.tsv analysis_files/Genus_species_summarystats.tsv
+    mv snp_files/populations.structure analysis_files/Genus_species_structure.str
+    mv alignment_files/populations.all.phylip analysis_files/Genus_species_alignment.phylip
+
+Once this is done, you can use less to check out your output files! I summary looking at the estimates of pi (nucleotide diversity) in your summary statistics (summarystats) file. Because it is a tab-delimited document, you can extract those columns like:
+
+    cut -f25-27 analysis_files/
+    
+You can ignore the top bit, as we want information from all sites (not just variant ones). Do you see any major differences between your populations?
+
+Finally, you'll want to save your analysis files for later, the same way we moved gstacks before. You can do that by opening a new window, changing to your target directory, and using the * wildcard character we used to copy reads to pull everything from your analysis_files directory:
+
+    rsync username@hopper.alliance.unm.edu:~/stacks_example/analysis_files/* .
+
+And that's all we have planned for you!
