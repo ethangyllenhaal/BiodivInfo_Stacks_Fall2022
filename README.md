@@ -103,12 +103,12 @@ In order to run Stacks, we need a population map (popmap). We will make two diff
 
 Then copy over a two-column populatiom map, something like this
 
-    Hyla_femoralis_LNB00715 Pop1
-    Hyla_femoralis_LNB00716 Pop1
-    Hyla_femoralis_LNB00975 Pop2
-    Hyla_femoralis_LNB00976 Pop2
-    Hyla_femoralis_LNB01285 Pop3
-    Hyla_femoralis_LNB01451 Pop3
+    Hyla_femoralis_LNB00715 PalmBeach
+    Hyla_femoralis_LNB00716 PalmBeach
+    Hyla_femoralis_LNB00975 Levy
+    Hyla_femoralis_LNB00976 Levy
+    Hyla_femoralis_LNB01285 Franklin
+    Hyla_femoralis_LNB01451 Franklin
     
 Now we need an individual-specific popmap, which we'll make like:
 
