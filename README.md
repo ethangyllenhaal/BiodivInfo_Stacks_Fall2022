@@ -44,6 +44,8 @@ Then, instead of having you write the full script, just copy this and paste it i
     # two commands to show you the differences between error and output files
     echo "Hello world!!"
     cat "Hello world!!"
+    
+    # change to your working directory
     cd $SLURM_SUBMIT_DIR
 
     # copies reads into your reads directory
