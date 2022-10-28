@@ -75,7 +75,7 @@ Then, let's look at one of them with zless:
 
     zless reads/Name_of_read_file
 
-Then, we'll use zcat to spit the contents of the file into the word count (wc) command, and use the -l flag to count the line number. This number divided by four is the number of reads in the file.
+Then, we'll use zcat to spit the contents of the file into the word count (wc) command, and use the -l flag to count the line number. This number divided by four is the number of reads in the file. This is one of the questions in your assignment!
 
     zcat reads/Name_of_read_file | wc -l
 
@@ -158,7 +158,7 @@ Then submit the script like because. It should take ~15 minutes to run for small
 
     sbatch run_stacks.slurm
 
-Once it's done running, you'll want to look at the output to make sure you have a reasonable number of loci. There are two log files for this, both in your stacks_output folder. The first and longest is denovo_map.log, which outlines the whole process that denovo_map.pl ran for you. The second one is gstacks.log has a component of your assignment, the number of loci genotypes (it's in the first log file, but harder to find). First, let's look at it like:
+Once it's done running, you'll want to look at the output to make sure you have a reasonable number of loci. There are two log files for this, both in your stacks_output folder. The first and longest is denovo_map.log, which outlines the whole process that denovo_map.pl ran for you. The second one is gstacks.log has the answer to two questions of your assignment: the number and length of loci genotypes and the per-sample coverage. First, let's look at it like:
 
     less stacks_output/gstacks.log
 
@@ -215,23 +215,24 @@ Then we need to call it in two steps (one for each data type), and then rename t
                 --threads 8
 
     # copy log files
-    cp snp_files/populations.log analysis_files/Genus_species_populations.log
     cp stacks_output/gstacks.log analysis_files/Genus_species_gstacks.log
+    cp snp_files/populations.log analysis_files/Genus_species_populations.log
+    cp alignment_files/populations.log analysis_files/Genus_species_individual_populations.log    
 
     # move files for future analysis
     mv snp_files/populations.snps.vcf analysis_files/Genus_species_snps.vcf
     mv snp_files/populations.sumstats_summary.tsv analysis_files/Genus_species_summarystats.tsv
     mv snp_files/populations.structure analysis_files/Genus_species_structure.str
     mv alignment_files/populations.all.phylip analysis_files/Genus_species_alignment.phylip
-
-Once this is done, you can use less to check out your output files! I summary looking at the estimates of pi (nucleotide diversity) in your summary statistics (summarystats) file. Because it is a tab-delimited document, you can extract those columns like:
-
-    cut -f25-27 analysis_files/
-    
-You can ignore the top bit, as we want information from all sites (not just variant ones). Do you see any major differences between your populations?
+    mv alignment_files/populations.sumstats_summary.tsv analysis_files/Genus_species_individual_simmarystats.tsv
 
 Finally, you'll want to save your analysis files for later, the same way we moved gstacks before. You can do that by opening a new window, changing to your target directory, and using the * wildcard character we used to copy reads to pull everything from your analysis_files directory:
 
     rsync username@hopper.alliance.unm.edu:~/stacks_example/analysis_files/* .
+
+In order to complete your assignment, you'll need to look at the contents of the files as well as send them to Dr. Barrow. We already looked at the gstacks log and counted how many reads we have, but the last question deals with a few of these outputs. First, both populations logs tell you how many loci were kept (the same for each) and how many variant sites there are (different for each). Second, the alignment phylip file will tell you the alignment length. Less commands for looking at them are below (you can do "cat" instead of "less", if you prefer). You should check out other files, too!!
+
+    less analysis_files/Genus_species_populations.log
+    less analysis_files/Genus_species_alignment.phylip
 
 And that's all we have planned for you!
