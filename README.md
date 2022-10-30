@@ -164,7 +164,7 @@ Once it's done running, you'll want to look at the output to make sure you have 
 
     less stacks_output/gstacks.log
 
-We'll then copy it to whatever computer you are using for your assignments. To do this, open a second terminal (or Powershell for Windows). Then, navigate to the directory you want to store it by right clicking in file explorer and copying the address as text (sorry, don't know what it's called in Mac). If the path has spaces, you'll need to put it in quotes. Here's an example for windows (using backslashes, because Windows is special):
+We'll then copy it to whatever computer you are using for your assignments. To do this, open a second terminal (or Powershell for Windows). Type cd and a space, then get the path to your target. To do this, navigate to the directory you want to store it in and drag the directory from the navigation bar to your new terminal. If you can't drag it, you can right click in file explorer and copying the address as text (sorry, don't know what it's called in Mac). If the path has spaces, you'll need to put it in quotes. Here's an example for windows (using backslashes, because Windows is special):
 
     cd 'C:\Documents\Biodiversity Informatics'
 
