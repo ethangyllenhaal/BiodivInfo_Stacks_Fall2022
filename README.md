@@ -153,7 +153,7 @@ Fortunately the script is pretty simple, particularly because these parameters s
 
     denovo_map.pl -T 8 -o stacks_output/ \
                   -m 10 -M 3 -n 3 \
-                  --popmap popmap_example \
+                  --popmap popmap_genus_species \
                   --samples reads/
 
 Then submit the script like because. It should take ~15 minutes to run for small and ~30 for large datasets, so if it finishes early there was probably an issue.
@@ -201,7 +201,7 @@ Then we need to call it in two steps (one for each data type), and then rename t
     
     # SNP files
     populations --in-path stacks_output/ \
-                --popmap popmap_example \
+                --popmap popmap_genus_species \
                 --out-path snp_files \
                 --min-samples-overall 0.8 \
                 --write-random-snp \
@@ -210,7 +210,7 @@ Then we need to call it in two steps (one for each data type), and then rename t
     
     # Alignment files
     populations --in-path stacks_output/ \
-                --popmap popmap_phylo_example \
+                --popmap popmap_phylo_genus_species \
                 --out-path alignment_files \
                 --min-samples-overall 0.8 \
                 --phylip-var-all \
