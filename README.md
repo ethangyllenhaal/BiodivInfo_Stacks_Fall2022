@@ -132,7 +132,7 @@ With the environment set up, it's time to set up the denovo assembly pipeline in
 
     nano run_stacks.slurm
 
-Fortunately the script is pretty simple, particularly because these parameters seem to work fairly well! You can read about it [here](https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php). Note that setting parameters is complicated (and described at length [here](https://catchenlab.life.illinois.edu/stacks/param_tut.php), and it is good to test that your results are robust to multiple parameter values. We'll stick to the ones here for now.
+Fortunately the script is pretty simple, particularly because these parameters seem to work fairly well! You can read about it [here](https://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php). Note that setting parameters is complicated, and described at length [here](https://catchenlab.life.illinois.edu/stacks/param_tut.php) and even greater length [here](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12775). It is good to test that your results are robust to multiple parameter values. We'll stick to the ones here for now.
 
     #!/bin/bash
 
@@ -226,7 +226,7 @@ Then we need to call it in two steps (one for each data type), and then rename t
     mv snp_files/populations.sumstats_summary.tsv analysis_files/Genus_species_summarystats.tsv
     mv snp_files/populations.structure analysis_files/Genus_species_structure.str
     mv alignment_files/populations.all.phylip analysis_files/Genus_species_alignment.phylip
-    mv alignment_files/populations.sumstats_summary.tsv analysis_files/Genus_species_individual_simmarystats.tsv
+    mv alignment_files/populations.sumstats_summary.tsv analysis_files/Genus_species_phylo_simmarystats.tsv
 
 Finally, you'll want to save your analysis files for later, the same way we moved gstacks before. You can do that by opening a new window, changing to your target directory, and using the * wildcard character we used to copy reads to pull everything from your analysis_files directory:
 
