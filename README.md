@@ -168,7 +168,7 @@ We'll then copy it to whatever computer you are using for your assignments. To d
 
     cd 'C:\Documents\Biodiversity Informatics'
 
-Then, you can use the same command we used to move reads around within CARC to move it to your computer. The syntax is always "rsync source destination". The source is the address of the CARC server and path to the file within CARC (using ~ to represent your home directory). Because we are in our target directory, the target can be represented by a period, like this:
+Then, you can use the same command we used to move reads around within CARC to move it to your computer. The syntax is always "rsync source destination". The source is the address of the CARC server and path to the file within CARC (using ~ to represent your home directory). Because we are in our target directory, the target can be represented by a period, like this (replace rsync with scp for windows powershell):
 
     rsync username@hopper.alliance.unm.edu:~/stacks_example/stacks_output/gstacks.log .
 
@@ -228,9 +228,13 @@ Then we need to call it in two steps (one for each data type), and then rename t
     mv alignment_files/populations.all.phylip analysis_files/Genus_species_alignment.phylip
     mv alignment_files/populations.sumstats_summary.tsv analysis_files/Genus_species_phylo_simmarystats.tsv
 
-Finally, you'll want to save your analysis files for later, the same way we moved gstacks before. You can do that by opening a new window, changing to your target directory, and using the * wildcard character we used to copy reads to pull everything from your analysis_files directory:
+Finally, you'll want to save your analysis files for later, the same way we moved gstacks before. You can do that by opening a new window, changing to your target directory, and using the * wildcard character we used to copy reads to pull everything from your analysis_files directory. For basic Unix and Mac:
 
-    rsync username@hopper.alliance.unm.edu:~/stacks_example/analysis_files/* .
+    rsync -r username@hopper.alliance.unm.edu:~/stacks_example/analysis_files/ .
+    
+For Windows Powershell:
+
+    scp username@hopper.alliance.unm.edu:~/stacks_example/analysis_files/* .
 
 In order to complete your assignment, you'll need to look at the contents of the files as well as send them to Dr. Barrow. We already looked at the gstacks log and counted how many reads we have, but the last question deals with a few of these outputs. First, both populations logs tell you how many loci were kept (the same for each) and how many variant sites there are (different for each). Second, the alignment phylip file will tell you the alignment length. Less commands for looking at them are below (you can do "cat" instead of "less", if you prefer). You should check out other files, too!!
 
